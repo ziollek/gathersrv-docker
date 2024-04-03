@@ -2,9 +2,7 @@ ARG base=coredns/coredns
 
 FROM $base
 
-WORKDIR /
-
 ADD coredns /coredns
-ADD Corefile /Corefile
+ADD Corefile /etc/coredns/Corefile
 
 ENTRYPOINT ["/coredns"]

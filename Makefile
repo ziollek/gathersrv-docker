@@ -40,7 +40,4 @@ rebuild-docker-only: version
 	cd $(DOCKER_PATH) && docker build -t $(FULLIMAGE) .
 
 run: version
-	docker run -p $(DNS_PORT):$(DNS_PORT)/udp -p $(DNS_PORT):$(DNS_PORT)/tcp -p $(METRICS_PORT):$(METRICS_PORT)/tcp -it -e DNS_PORT=$(DNS_PORT) -e METRICS_PORT=$(METRICS_PORT) -e UPSTREAM=$(UPSTREAM) --rm $(FULLIMAGE)
-
-exec: version
-	docker run -p $(DNS_PORT):$(DNS_PORT)/udp -p $(DNS_PORT):$(DNS_PORT)/tcp -p $(METRICS_PORT):$(METRICS_PORT)/tcp -it -e DNS_PORT=$(DNS_PORT) -e METRICS_PORT=$(METRICS_PORT) -e UPSTREAM=$(UPSTREAM) --rm $(FULLIMAGE) -conf /opt/Coredns
+	docker run -p $(DNS_PORT):$(DNS_PORT)/udp -p $(DNS_PORT):$(DNS_PORT)/tcp -p $(METRICS_PORT):$(METRICS_PORT)/tcp -it -e DNS_PORT=$(DNS_PORT) -e METRICS_PORT=$(METRICS_PORT) -e UPSTREAM=$(UPSTREAM) --rm $(FULLIMAGE) -conf /etc/coredns/Corefile
