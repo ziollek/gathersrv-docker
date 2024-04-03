@@ -64,3 +64,29 @@ _service._tcp.my-service-headless.my-namespace.svc.cluster.all.	10 IN SRV 0 100 
 ;; WHEN: Wed Apr 03 18:19:51 CEST 2024
 ;; MSG SIZE  rcvd: 502
 ```
+
+Sample resolution for single hostname:
+```
+dig c3-my-service-headless.my-namespace.svc.cluster.all. -p5300 @127.0.0.1
+
+; <<>> DiG 9.18.20 <<>> c3-my-service-headless.my-namespace.svc.cluster.all. -p5300 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8836
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 4f2a8bd4f954b3a0 (echoed)
+;; QUESTION SECTION:
+;c3-my-service-headless.my-namespace.svc.cluster.all. IN	A
+
+;; ANSWER SECTION:
+c3-my-service-headless.my-namespace.svc.cluster.all. 10	IN A 127.0.0.1
+
+;; Query time: 2 msec
+;; SERVER: 127.0.0.1#5300(127.0.0.1) (UDP)
+;; WHEN: Wed Apr 03 20:17:36 CEST 2024
+;; MSG SIZE  rcvd: 159
+```

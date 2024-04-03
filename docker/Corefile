@@ -5,6 +5,10 @@
         answer "{{ .Name }} 10 IN SRV 0 100 2379 {{ .Group.record }}"
         fallthrough
     }
+    template IN A local {
+        answer "{{ .Name }} 10 IN A 127.0.0.1"
+        fallthrough
+    }
     prometheus 0.0.0.0:{$METRICS_PORT}
 }
 
