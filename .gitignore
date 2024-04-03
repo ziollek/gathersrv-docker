@@ -1,0 +1,4 @@
+.idea
+dockerconfig
+coredns-source
+docker/coredns

@@ -1,0 +1,43 @@
+.:{$DNS_PORT} {
+    log . "catch-all logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+    template IN SRV local {
+        match (_[^.]+\.)*(?P<record>.*)$
+        answer "{{ .Name }} 10 IN SRV 0 100 2379 {{ .Group.record }}"
+        fallthrough
+    }
+    prometheus 0.0.0.0:{$METRICS_PORT}
+}
+
+cluster.cluster1:{$DNS_PORT} {
+        log . "cluster1 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+        rewrite stop {
+                name suffix .cluster.cluster1 .cluster.local answer auto
+        }
+        forward . 127.0.0.1:{$DNS_PORT}
+}
+
+cluster.cluster2:{$DNS_PORT} {
+    log . "cluster2 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+    rewrite stop {
+            name suffix .cluster.cluster2 .cluster.local answer auto
+    }
+    forward . 127.0.0.1:{$DNS_PORT}
+}
+
+cluster.cluster3:{$DNS_PORT} {
+    log . "cluster3 logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+    rewrite stop {
+            name suffix .cluster.cluster3 .cluster.local answer auto
+    }
+    forward . 127.0.0.1:{$DNS_PORT}
+}
+
+cluster.all:{$DNS_PORT} {
+  gathersrv cluster.all. {
+      cluster.cluster1. c1-
+      cluster.cluster2. c2-
+      cluster.cluster3. c3-
+  }
+  log . "sub-query logger: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+  forward . 127.0.0.1:{$DNS_PORT}
+}
